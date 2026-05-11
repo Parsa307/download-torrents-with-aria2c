@@ -1,0 +1,32 @@
+name: Download Torrent
+
+on:
+  workflow_dispatch:
+    inputs:
+      MAGNET:
+        description: 'MAGNET'
+        required: true
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download Torrent
+        run: aria2c "${{ github.event.inputs.MAGNET }}"
+
+      - name: Get Downloaded Filename
+        id: filename
+        run: echo "filename=$(ls -t | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Create Release on GitHub
+        uses: softprops/action-gh-release@v3
+        with:
+          draft: true
+          files: ${{ steps.filename.outputs.filename }}
