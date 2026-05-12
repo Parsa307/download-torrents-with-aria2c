@@ -1,4 +1,4 @@
-name: Download Torrent
+name: Download Torrent (split)
 
 on:
   workflow_dispatch:
@@ -18,11 +18,11 @@ jobs:
       - name: Zip Downloaded Torrent
         id: files
         run: |
-          zip -r torrent.zip *
-          echo "files=torrent.zip" >> $GITHUB_OUTPUT
+          zip -r -s 1536m torrent.zip *
+          echo "files=torrent.z" >> $GITHUB_OUTPUT
 
       - name: Create Release on GitHub
         uses: softprops/action-gh-release@v3
         with:
           draft: true
-          files: ${{ steps.files.outputs.files }}
+          files: ${{ steps.files.outputs.files }}*
