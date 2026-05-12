@@ -16,13 +16,10 @@ jobs:
         run: aria2c --seed-time=0 "${{ github.event.inputs.MAGNET }}"
 
       - name: Zip Downloaded Torrent
-        id: files
-        run: |
-          zip -r torrent.zip *
-          echo "files=torrent.zip" >> $GITHUB_OUTPUT
+        run: zip -r torrent.zip *
 
       - name: Create Release on GitHub
         uses: softprops/action-gh-release@v3
         with:
           draft: true
-          files: ${{ steps.files.outputs.files }}
+          files: torrent.zip
