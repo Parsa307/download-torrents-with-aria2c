@@ -1,0 +1,30 @@
+name: Download Torrent (file index)
+
+on:
+  workflow_dispatch:
+    inputs:
+      FILE_INDEX:
+        description: 'FILE_INDEX'
+        required: true
+      MAGNET:
+        description: 'MAGNET'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Torrent
+        run: |
+          aria2c --select-file="${{ github.event.inputs.FILE_INDEX }}" --seed-time=0 "${{ github.event.inputs.MAGNET }}"
+          rm *.aria2
+
+      - name: Zip Downloaded Torrent
+        run: zip -r torrent.zip *
+
+      - name: Create Release on GitHub
+        uses: softprops/action-gh-release@v3
+        with:
+          draft: true
+          files: torrent.zip
