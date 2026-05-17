@@ -9,6 +9,9 @@ on:
       MAGNET:
         description: 'MAGNET'
         required: true
+      ARCHIVE_NAME:
+        description: 'ARCHIVE_NAME'
+        required: true
 
 jobs:
   release:
@@ -21,10 +24,10 @@ jobs:
           rm *.aria2
 
       - name: Zip Downloaded Torrent
-        run: zip -r -s 1536m torrent.zip *
+        run: zip -r -s 1536m "${{ github.event.inputs.ARCHIVE_NAME }}.zip" *
 
       - name: Create Release on GitHub
         uses: softprops/action-gh-release@v3
         with:
           draft: true
-          files: torrent.z*
+          files: "${{ github.event.inputs.ARCHIVE_NAME }}.z*"
