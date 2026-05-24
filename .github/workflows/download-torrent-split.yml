@@ -25,4 +25,4 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           draft: true
-          files: "${{ github.event.inputs.ARCHIVE_NAME }}.z*"
+          files: "*.z*"
