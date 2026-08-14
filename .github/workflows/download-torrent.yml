@@ -9,6 +9,9 @@ on:
       ARCHIVE_NAME:
         description: 'ARCHIVE_NAME'
         required: true
+      SPLIT:
+        description: 'Set to "y" to split zip (leave blank to skip)'
+        required: false
 
 jobs:
   release:
@@ -19,10 +22,15 @@ jobs:
         run: aria2c --seed-time=0 "${{ github.event.inputs.MAGNET }}"
 
       - name: Zip Downloaded Torrent
-        run: zip -r "${{ github.event.inputs.ARCHIVE_NAME }}.zip" *
+        run: |
+          if [[ "${{ github.event.inputs.SPLIT }}" == "y" ]]; then
+            zip -r -s 1536m "${{ github.event.inputs.ARCHIVE_NAME }}.zip" *
+          else
+            zip -r "${{ github.event.inputs.ARCHIVE_NAME }}.zip" *
+          fi
 
       - name: Create Release on GitHub
         uses: softprops/action-gh-release@v3
         with:
           draft: true
-          files: "*.zip"
+          files: "*.z*"
